@@ -1,5 +1,6 @@
-package com.casemodul4.model;
+package com.casemodul4.model.friend;
 
+import com.casemodul4.model.UserAcc;
 import lombok.Data;
 
 import javax.persistence.*;

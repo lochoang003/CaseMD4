@@ -1,4 +1,4 @@
-package com.config.fillter;
+package com.casemodul4.config;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 

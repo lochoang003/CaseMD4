@@ -1,7 +1,8 @@
-package com.config.fillter;
+package com.casemodul4.config;
 
-import com.model.Account;
-import com.service.IAccountService;
+
+import com.casemodul4.model.UserAcc;
+import com.casemodul4.service.useracc.IUserAccService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,7 @@ import org.springframework.web.cors.CorsConfiguration;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    IAccountService<Account> iAccountService;
+    IUserAccService<UserAcc> iUserAccService;
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     @Override
     public AuthenticationManager authenticationManager() throws Exception {
@@ -34,9 +35,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 //        http.csrf().ignoringAntMatchers("/**");
-        http.authorizeRequests().antMatchers( "/login").permitAll()
-                .and().authorizeRequests().antMatchers("/employee**").hasRole("ADMIN")
-                .and().authorizeRequests().antMatchers("/employee/detail**").hasRole("USER")
+        http.authorizeRequests().antMatchers( "/register","/login").permitAll()
+//                .and().authorizeRequests().antMatchers("/employee**").hasRole("ADMIN")
+//                .and().authorizeRequests().antMatchers("/employee/detail**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and().csrf().disable();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -50,6 +51,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // xác thực
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(iAccountService).passwordEncoder(NoOpPasswordEncoder.getInstance());
+        auth.userDetailsService(iUserAccService).passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
 }

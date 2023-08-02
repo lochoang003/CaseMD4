@@ -1,7 +1,7 @@
-package com.config.fillter;
+package com.casemodul4.config;
 
-import com.service.AccountserviceImpl;
-import com.service.JwtService;
+import com.casemodul4.service.JwtService;
+import com.casemodul4.service.useracc.IUserAccService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    AccountserviceImpl accountservice;
+    IUserAccService accountservice;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, IOException {
