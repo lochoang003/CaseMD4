@@ -22,4 +22,9 @@ public class CommentServiceImpl implements ICommentService {
         List<Comment> comments = commentRepo.findByUserAccIdAndPostId(idUser, idPost);
         return comments.stream().map(Comment::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public void save(Comment comment) {
+        commentRepo.save(comment);
+    }
 }
