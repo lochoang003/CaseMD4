@@ -9,9 +9,12 @@ public interface IUserAccRepo extends JpaRepository<UserAcc,Integer> {
     @Query(value = "SELECT  u FROM UserAcc u WHERE u.password LIKE :password AND  u.email LIKE :email")
     UserAcc getUserAccLogin1(@Param("password") String password, @Param("email") String email);
 
-//    @Query(value = "SELECT u from UserAcc u where u.username= :username and u.password= :password")
+    //    @Query(value = "SELECT u from UserAcc u where u.username= :username and u.password= :password")
 //    UserAcc getUserAccLogin2(@Param("username")String username, @Param("password") String password);
     UserAcc findByUsernameAndPassword(String username, String password);
+
     UserAcc findUserAccsByUsername(String username);
+    UserAcc findAllByUsernameAndEmail(String username,String email);
 
 }
+
