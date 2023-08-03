@@ -47,6 +47,8 @@ public class UserAccService implements IUserAccService {
         return iUserAccRepo.findByUsernameAndPassword(username,password);
     }
 
+
+
     @Override
     public UserDetails loadUserByUsername(String username) {
         UserAcc userAcc = iUserAccRepo.findUserAccsByUsername(username);
