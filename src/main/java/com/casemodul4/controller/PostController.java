@@ -1,33 +1,59 @@
 package com.casemodul4.controller;
 
 import com.casemodul4.model.Post;
-import com.casemodul4.service.PostService;
+import com.casemodul4.model.UserAcc;
+import com.casemodul4.model.dto.PostDTO;
+import com.casemodul4.service.impl.PostService;
+import com.casemodul4.service.impl.UserAccService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/posts")
+@RequestMapping("/user/{idUserAcc}/post")
 public class PostController {
     @Autowired
     PostService postService;
+    @Autowired
+    UserAccService userAccService;
 
     @GetMapping
-    public List<Post> getAll() {
-        return postService.getAll();
+    public List<Post> getAll(@PathVariable int idUserAcc) {
+        return postService.getAllPostByUserAcc(idUserAcc);
     }
 
     @PostMapping("/createPost")
     public void create(@RequestBody Post post) {
         postService.save(post);
     }
-
-    @PostMapping("/editPost")
-    public void edit(@RequestBody Post post){
-        postService.save(post);
+    @GetMapping("/{id}")
+    public ResponseEntity<Post> findCustomerById(@PathVariable int id) {
+        Optional<Post> postOptional = postService.findById(id);
+        if (!postOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(postOptional.get(), HttpStatus.OK);
     }
+
+    @PostMapping("/edit/{idPost}")
+    public ResponseEntity<Post> updatePost(@PathVariable int idPost, @RequestBody Post post) {
+        Optional<Post> postOptional = postService.findById(idPost);
+        if (!postOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        post.setId(postOptional.get().getId());
+        return new ResponseEntity<>(postService.save(post), HttpStatus.OK);
+    }
+
+//    @PostMapping("/editPost")
+//    public void edit(@RequestBody Post post){
+//        postService.save(post);
+//    }
 
     @PostMapping("/deletePost")
     public void delete(@RequestBody Post post) {
