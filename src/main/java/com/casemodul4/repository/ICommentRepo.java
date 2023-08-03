@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface ICommentRepo extends JpaRepository<Comment, Integer> {
     List<Comment> findByUserAccIdAndPostId(int userId, int postId);
+    List<Comment> getAllByPostId(int idPost);
 
 }

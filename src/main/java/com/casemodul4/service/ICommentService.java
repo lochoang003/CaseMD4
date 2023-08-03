@@ -8,4 +8,5 @@ import java.util.List;
 public interface ICommentService {
     List<CommentDto> findByUserAccIdAndPostId(int idUser, int idPost);
     void save(Comment comment);
+    List<CommentDto> getAllByPostId(int idPost);
 }

@@ -19,7 +19,7 @@ public class Comment {
     @Column(columnDefinition = "TEXT")
     private String content;
     private Date createDate;
-    public CommentDto toDto() {
+    public CommentDto commentDto() {
         return new CommentDto(id, content, createDate, userAcc.getId(), userAcc.getUsername(), userAcc.getAvatar(), post.getId());
     }
 

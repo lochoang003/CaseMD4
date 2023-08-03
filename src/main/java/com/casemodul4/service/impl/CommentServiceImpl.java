@@ -1,4 +1,4 @@
-package com.casemodul4.service.Impl;
+package com.casemodul4.service.impl;
 
 import com.casemodul4.model.Comment;
 import com.casemodul4.model.dto.CommentDto;
@@ -20,11 +20,16 @@ public class CommentServiceImpl implements ICommentService {
     public List<CommentDto> findByUserAccIdAndPostId(int idUser, int idPost) {
 
         List<Comment> comments = commentRepo.findByUserAccIdAndPostId(idUser, idPost);
-        return comments.stream().map(Comment::toDto).collect(Collectors.toList());
+        return comments.stream().map(Comment::commentDto).collect(Collectors.toList());
     }
 
     @Override
     public void save(Comment comment) {
         commentRepo.save(comment);
     }
+
+    @Override
+    public List<CommentDto> getAllByPostId(int idPost) {
+        List<Comment> comments = commentRepo.getAllByPostId( idPost);
+        return comments.stream().map(Comment::commentDto).collect(Collectors.toList());    }
 }

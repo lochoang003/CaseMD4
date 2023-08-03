@@ -20,4 +20,9 @@ public class CommentController {
         List<CommentDto> comments = commentService.findByUserAccIdAndPostId(userId, postId);
         return ResponseEntity.ok(comments);
     }
+    @GetMapping("/{idP}")
+    public ResponseEntity<List<CommentDto>> getAllByPostId(@PathVariable int idP){
+    List<CommentDto> commentDtos = commentService.getAllByPostId(idP);
+        return ResponseEntity.ok(commentDtos);
+    }
 }
