@@ -15,15 +15,19 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/user/{idUserAcc}/post")
+@RequestMapping("/posts")
 public class PostController {
     @Autowired
     PostService postService;
     @Autowired
     UserAccService userAccService;
-
     @GetMapping
-    public List<Post> getAll(@PathVariable int idUserAcc) {
+    public List<Post> getAll() {
+        return postService.getAll();
+    }
+
+    @GetMapping("/user/{idUserAcc}")
+    public List<Post> getAllOfUserAcc(@PathVariable int idUserAcc) {
         return postService.getAllPostByUserAcc(idUserAcc);
     }
 
