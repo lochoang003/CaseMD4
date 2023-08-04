@@ -2,6 +2,7 @@ package com.casemodul4.service.impl;
 
 import com.casemodul4.model.Role;
 import com.casemodul4.model.UserAcc;
+import com.casemodul4.model.dto.UserAccDTO;
 import com.casemodul4.repository.IUserAccRepo;
 import com.casemodul4.service.IUserAccService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,9 @@ public class UserAccService implements IUserAccService {
     }
 
     @Override
-    public Optional<UserAcc> findById(int id) {
-        return iUserAccRepo.findById(id);
+    public UserAccDTO findById(int id) {
+        UserAcc userAccDTO = iUserAccRepo.getAllById(id) ;
+        return userAccDTO.userAccDTO();
     }
 
     @Override

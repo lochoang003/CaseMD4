@@ -39,4 +39,8 @@ public class PostService implements ICrudService<Post> {
     public void delete(int id) {
          iPostRepo.deleteById(id);
     }
+
+    public void delete(Post post) {
+         iPostRepo.delete(post);
+    }
 }

@@ -36,7 +36,7 @@ public class PostController {
         postService.save(post);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Post> findCustomerById(@PathVariable int id) {
+    public ResponseEntity<Post> findUserAccById(@PathVariable int id) {
         Optional<Post> postOptional = postService.findById(id);
         if (!postOptional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -54,6 +54,20 @@ public class PostController {
         return new ResponseEntity<>(postService.save(post), HttpStatus.OK);
     }
 
+    @GetMapping("/deletePost/{idPost}")
+    public ResponseEntity<Post> remove(@PathVariable int idPost) {
+        Optional<Post> postOptional = postService.findById(idPost);
+        if (!postOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        postService.delete(idPost);
+        return ResponseEntity.ok().build();
+    }
+
+
+
+
+
 //    @PostMapping("/editPost")
 //    public void edit(@RequestBody Post post){
 //        postService.save(post);
@@ -63,4 +77,8 @@ public class PostController {
     public void delete(@RequestBody Post post) {
         postService.delete(post.getId());
     }
+
+
+
 }
+

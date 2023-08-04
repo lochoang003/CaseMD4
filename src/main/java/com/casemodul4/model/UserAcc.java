@@ -1,5 +1,6 @@
 package com.casemodul4.model;
 
+import com.casemodul4.model.dto.UserAccDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,5 +25,8 @@ public class UserAcc {
     private String Description;
     @ManyToOne
     private Role role;
+    public UserAccDTO userAccDTO(){
+        return new UserAccDTO(id,username,email,fullName,avatar,coverPhoto,getDescription(),role);
+    };
 
 }
