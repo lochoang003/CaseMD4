@@ -14,7 +14,6 @@ public class UserAccService implements ICrudService<UserAcc> {
     @Override
     public void save(UserAcc userAcc) {
     }
-
     @Override
     public void delete(int id) {
     }

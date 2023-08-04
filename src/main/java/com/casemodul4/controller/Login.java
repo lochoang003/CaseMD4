@@ -29,7 +29,6 @@ public class Login {
     public UserAccToken getLogin(@RequestBody UserAcc userAcc){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userAcc.getUsername(), userAcc.getPassword()));
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
         userAcc = userAccService.getUserAccLogin2(userAcc.getUsername(), userAcc.getPassword());
         String token = jwtService.createToken(authentication);
@@ -38,9 +37,9 @@ public class Login {
     }
 
 
-    @PostMapping("/register")
-    public void register(@RequestBody UserAcc userAcc) {
-        userAccService.save(userAcc);
-    }
+//    @PostMapping("/register")
+//    public void register(@RequestBody UserAcc userAcc) {
+//        userAccService.save(userAcc);
+//    }
 
 }

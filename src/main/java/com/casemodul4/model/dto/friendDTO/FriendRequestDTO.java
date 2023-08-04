@@ -1,4 +1,4 @@
-package com.casemodul4.model.dto;
+package com.casemodul4.model.dto.friendDTO;
 
 import lombok.Data;
 

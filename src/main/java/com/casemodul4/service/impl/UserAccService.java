@@ -54,4 +54,5 @@ public class UserAccService implements IUserAccService {
         roles.add(userAcc.getRole());
         return new User(userAcc.getUsername(),userAcc.getPassword(),roles);
     }
+
 }

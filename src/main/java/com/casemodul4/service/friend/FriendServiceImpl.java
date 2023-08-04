@@ -1,7 +1,8 @@
 package com.casemodul4.service.friend;
 
-import com.casemodul4.model.friend.Friend;
-import com.casemodul4.repository.FriendRepository;
+
+import com.casemodul4.model.Friend;
+import com.casemodul4.repository.friend.FriendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
