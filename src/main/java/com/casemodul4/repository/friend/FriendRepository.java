@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface FriendRepository extends JpaRepository<Friend, Integer> {
     //truy vấn check tk 1 có là bạn với tk2 hay không:
-    Friend findByUserAccAndFriend(UserAcc userAcc, UserAcc friend);
+//    Friend findByUserAccAndFriend(UserAcc userAcc, UserAcc friend);
     //truy vấn check tk 1 có phải là bạn với tk 2 hay không và ngược lại:
     @Query("SELECT f FROM Friend f WHERE (f.userAcc = :user1 AND f.friend = :user2) OR (f.userAcc = :user2 AND f.friend = :user1)")
     Friend findFriendship(UserAcc user1, UserAcc user2);
