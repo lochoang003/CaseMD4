@@ -15,6 +15,7 @@ public interface IUserAccRepo extends JpaRepository<UserAcc,Integer> {
 
     UserAcc findUserAccsByUsername(String username);
     UserAcc findAllByUsernameAndEmail(String username,String email);
+    UserAcc getAllById(int id);
 
 }
 

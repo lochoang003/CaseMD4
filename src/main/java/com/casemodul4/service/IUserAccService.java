@@ -1,6 +1,7 @@
 package com.casemodul4.service;
 
 import com.casemodul4.model.UserAcc;
+import com.casemodul4.model.dto.UserAccDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 public interface IUserAccService extends UserDetailsService {
     Iterable<UserAcc> findAll();
 
-    Optional<UserAcc> findById(int id);
+    UserAccDTO findById(int id);
 
     UserAcc save(UserAcc userAcc);
 
