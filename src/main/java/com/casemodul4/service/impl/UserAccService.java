@@ -35,6 +35,7 @@ public class UserAccService implements IUserAccService {
         if (userAcc1 == null) {
             userAcc.setRole(new Role());
             userAcc.getRole().setId(2);
+            iUserAccRepo.save(userAcc);
             return true;
         }
         return false;
@@ -63,4 +64,5 @@ public class UserAccService implements IUserAccService {
         roles.add(userAcc.getRole());
         return new User(userAcc.getUsername(), userAcc.getPassword(), roles);
     }
+
 }

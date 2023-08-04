@@ -19,7 +19,6 @@ public class JwtService {
     public String createToken(Authentication authentication) {
         // lấy đối tượng đang đăng nhập.
         User user = (User) authentication.getPrincipal();
-
         return Jwts.builder()
                 .setSubject((user.getUsername()))
                 .setIssuedAt(new Date())
@@ -27,7 +26,6 @@ public class JwtService {
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
     }
-
     // lấy username từ token
     public String getUserNameFromJwtToken(String token) {
         String userName = Jwts.parser()
