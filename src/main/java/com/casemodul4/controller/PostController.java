@@ -1,26 +1,17 @@
 package com.casemodul4.controller;
 
 import com.casemodul4.model.Post;
-<<<<<<< HEAD
 import com.casemodul4.model.UserAcc;
 import com.casemodul4.model.dto.PostDTO;
 import com.casemodul4.service.impl.PostService;
 import com.casemodul4.service.impl.UserAccService;
-=======
-import com.casemodul4.service.PostService;
-
->>>>>>> bc267a5908768f9a643604bdebf038d026486da5
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-<<<<<<< HEAD
 import java.util.Optional;
-=======
-import java.util.Map;
->>>>>>> bc267a5908768f9a643604bdebf038d026486da5
 
 @RestController
 @CrossOrigin("*")
@@ -28,18 +19,10 @@ import java.util.Map;
 public class PostController {
     @Autowired
     PostService postService;
-<<<<<<< HEAD
     @Autowired
     UserAccService userAccService;
-=======
-
-
-
->>>>>>> bc267a5908768f9a643604bdebf038d026486da5
     @GetMapping
     public List<Post> getAll() {
-
-
         return postService.getAll();
     }
 
@@ -49,13 +32,9 @@ public class PostController {
     }
 
     @PostMapping("/createPost")
-    public void create(@RequestBody Post post)  {
-
+    public void create(@RequestBody Post post) {
         postService.save(post);
-
-
     }
-<<<<<<< HEAD
     @GetMapping("/{id}")
     public ResponseEntity<Post> findUserAccById(@PathVariable int id) {
         Optional<Post> postOptional = postService.findById(id);
@@ -63,13 +42,6 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(postOptional.get(), HttpStatus.OK);
-=======
-
-    @PostMapping("/editPost")
-    public void edit(@RequestBody Post post){
-        System.out.println(post);
-        postService.save(post);
->>>>>>> bc267a5908768f9a643604bdebf038d026486da5
     }
 
     @PostMapping("/edit/{idPost}")
