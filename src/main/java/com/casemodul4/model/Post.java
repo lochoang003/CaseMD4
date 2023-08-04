@@ -20,7 +20,7 @@ public class Post {
     private UserAcc userAcc;
     @Column(columnDefinition = "TEXT")
     private String content;
-    private String img;
+    private String ou;
     private String video;
     private Date createDate;
     private int likeCount;

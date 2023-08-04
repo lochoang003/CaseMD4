@@ -11,7 +11,7 @@ public interface IUserAccService extends UserDetailsService {
 
     Optional<UserAcc> findById(int id);
 
-    UserAcc save(UserAcc userAcc);
+    boolean save(UserAcc userAcc);
 
     void remove(int id);
     UserAcc getUserAccLogin1( String email, String password);

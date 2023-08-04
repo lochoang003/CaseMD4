@@ -1,5 +1,6 @@
 package com.casemodul4.controller;
 
+import com.casemodul4.model.Role;
 import com.casemodul4.model.UserAcc;
 import com.casemodul4.model.dto.UserAccToken;
 import com.casemodul4.service.IUserAccService;
@@ -26,14 +27,14 @@ public class Login {
     IUserAccService userAccService;
 
     @PostMapping("/login")
-    public UserAccToken getLogin(@RequestBody UserAcc userAcc){
+    public UserAccToken getLogin(@RequestBody UserAcc userAcc) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userAcc.getUsername(), userAcc.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         userAcc = userAccService.getUserAccLogin2(userAcc.getUsername(), userAcc.getPassword());
         String token = jwtService.createToken(authentication);
-        UserAccToken userAccToken = new UserAccToken(userAcc.getId(), userAcc.getUsername(), userAcc.getEmail(), userAcc.getFullName(), userAcc.getAvatar(),userAcc.getCoverPhoto(),userAcc.getDescription(),userAcc.getRole(),token);
+        UserAccToken userAccToken = new UserAccToken(userAcc.getId(), userAcc.getUsername(), userAcc.getEmail(), userAcc.getFullName(), userAcc.getAvatar(), userAcc.getCoverPhoto(), userAcc.getDescription(), userAcc.getRole(), token);
         return userAccToken;
     }
 
@@ -41,6 +42,7 @@ public class Login {
     @PostMapping("/register")
     public void register(@RequestBody UserAcc userAcc) {
         userAccService.save(userAcc);
+
     }
 
 }
