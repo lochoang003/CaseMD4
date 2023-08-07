@@ -15,7 +15,7 @@ public class PostService implements ICrudService<Post> {
     IPostRepo iPostRepo;
     @Override
     public List<Post> getAll() {
-        return (List<Post>) iPostRepo.findAll();
+        return  iPostRepo.getAll();
     }
 
 

@@ -35,6 +35,11 @@ public class PostController {
     public void create(@RequestBody Post post) {
         postService.save(post);
     }
+    @PostMapping("/editPost")
+    public void edit(@RequestBody Post post) {
+        postService.save(post);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Post> findUserAccById(@PathVariable int id) {
         Optional<Post> postOptional = postService.findById(id);
@@ -77,8 +82,15 @@ public class PostController {
     public void delete(@RequestBody Post post) {
         postService.delete(post.getId());
     }
+    @GetMapping("/findPostById/{id}")
+    public  Post searchPost(@PathVariable int id){
+        return postService.findById(id).get();
+    }
+
 
 
 
 }
+
+
 

@@ -13,4 +13,7 @@ public interface IPostRepo extends CrudRepository<Post,Integer> {
     Optional<Post> findById(int id);
     @Query(nativeQuery = true ,value = "select * from post join user_acc on user_acc_id = user_acc.id where user_acc_id= :id order by post.id desc")
     List<Post> findAllPostByUserAccId(@Param("id") int id);
+
+    @Query(value = "select p from Post p order by p.id desc ")
+    List<Post> getAll();
 }
