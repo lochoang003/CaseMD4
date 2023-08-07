@@ -15,9 +15,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
 @RestController
 
 @RequestMapping("/api")
@@ -28,63 +27,78 @@ public class FriendController {
     @Autowired
     private FriendRepository friendRepository;
 //api gửi lời mời kết bạn
-    @PostMapping("/sendAddFriend")
-    public ResponseEntity<String> friendRequest(@RequestBody FriendRequestDTO friendRequestDTO) {
-        UserAcc sender = userAccRepo.findById( friendRequestDTO.getSenderId()).orElse(null);
-        UserAcc receiver = userAccRepo.findById( friendRequestDTO.getReceiverId()).orElse(null);
-        if (sender == null || receiver == null) {
-            return ResponseEntity.notFound().build();
-        }
-        Friend existingFriendship = friendRepository.findByUserAccAndFriend(sender, receiver);
-        if (existingFriendship != null && existingFriendship.getStatus() == 0) {
-            return ResponseEntity.ok().body("Đã gửi lời kết bạn trước đó.");
-        }
-        Friend friendship = new Friend();
-        friendship.setUserAcc(sender);
-        friendship.setFriend(receiver);
-        friendship.setStatus((byte) 0); // Mặc định là pending khi gửi yêu cầu kết bạn
-        friendRepository.save(friendship);
-        return ResponseEntity.ok().body("Đã gửi lời kết bạn thành công.");
+@PostMapping("/sendAddFriend")
+public ResponseEntity<String> friendRequest(@RequestBody FriendRequestDTO friendRequestDTO) {
+    UserAcc sender = userAccRepo.findById(friendRequestDTO.getSenderId()).orElse(null);
+    UserAcc receiver = userAccRepo.findById(friendRequestDTO.getReceiverId()).orElse(null);
+
+    if (sender == null || receiver == null) {
+        return ResponseEntity.notFound().build();
     }
-//api đồng ý kết bạn
+
+    // Kiểm tra nếu đã là bạn bè trước đó thì không gửi lại lời mời kết bạn
+    Friend existingFriendship1 = friendRepository.findFriendship(sender, receiver);
+    Friend existingFriendship2 = friendRepository.findFriendship(receiver, sender);
+    if (existingFriendship1 != null && existingFriendship1.getStatus() == 1 &&
+            existingFriendship2 != null && existingFriendship2.getStatus() == 1) {
+        return ResponseEntity.ok().body("Hai tài khoản đã là bạn bè.");
+    }
+
+    // Kiểm tra nếu đã gửi lời mời trước đó thì không gửi lại
+    if (existingFriendship1 != null && existingFriendship1.getStatus() == 0) {
+        return ResponseEntity.ok().body("Đã gửi lời kết bạn trước đó.");
+    }
+
+    // Gửi lời mời kết bạn
+    Friend friendship = new Friend();
+    friendship.setUserAcc(sender);
+    friendship.setFriend(receiver);
+    friendship.setStatus((byte) 0); // Mặc định là pending khi gửi yêu cầu kết bạn
+    friendRepository.save(friendship);
+    return ResponseEntity.ok().body("Đã gửi lời kết bạn thành công.");
+}
+
+    //api đồng ý kết bạn
     @PostMapping("/acceptFriendRequest")
-    public ResponseEntity<String> acceptFriendRequest(@RequestBody FriendRequestDTO friendRequestDTO) {
+    public ResponseEntity<Map<String, Object>> acceptFriendRequest(@RequestBody FriendRequestDTO friendRequestDTO) {
         UserAcc sender = userAccRepo.findById(friendRequestDTO.getSenderId()).orElse(null);
         UserAcc receiver = userAccRepo.findById(friendRequestDTO.getReceiverId()).orElse(null);
         if (sender == null || receiver == null) {
             return ResponseEntity.notFound().build();
         }
-        Friend friendship = friendRepository.findByUserAccAndFriend(sender, receiver);
+        Friend friendship = friendRepository.findFriendship(sender, receiver);
         if (friendship == null || friendship.getStatus() != 0) {
-            return ResponseEntity.badRequest().body("Không tìm thấy yêu cầu kết bạn chờ xử lý.");
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Không tìm thấy yêu cầu kết bạn chờ xử lý.");
+            return ResponseEntity.ok(response);
         }
         friendship.setStatus((byte) 1); // Cập nhật trạng thái từ "pending" sang "accepted"
         friendRepository.save(friendship);
-        return ResponseEntity.ok("Đồng ý kết bạn thành công.");
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Đồng ý kết bạn thành công.");
+        return ResponseEntity.ok(response);
     }
+
     //api lấy danh sách các bạn bè của 1 tài khoản
     @GetMapping("/friends/{userId}")
     public ResponseEntity<List<FriendInfoDTO>> getFriends(@PathVariable("userId") Integer userId) {
         List<FriendInfoDTO> friendInfoList = new ArrayList<>();
-
         // Tìm tài khoản của người dùng dựa trên userId
         UserAcc user = userAccRepo.findById(userId).orElse(null);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-
         // Lấy danh sách bạn bè của người dùng
         List<Friend> friends = friendRepository.findAllByUserAccOrFriend(user, user);
-
         // Duyệt qua danh sách bạn bè và lấy thông tin cần trả về
         for (Friend friend : friends) {
             UserAcc friendUser = friend.getUserAcc().equals(user) ? friend.getFriend() : friend.getUserAcc();
-
             FriendInfoDTO friendInfo = new FriendInfoDTO();
             friendInfo.setAvatar(friendUser.getAvatar());
             friendInfo.setFullName(friendUser.getFullName());
             friendInfo.setDescription(friendUser.getDescription());
-
             friendInfoList.add(friendInfo);
         }
         return ResponseEntity.ok(friendInfoList);
@@ -126,7 +140,7 @@ public class FriendController {
             friendRepository.delete(friendship);
             return ResponseEntity.ok("Hủy kết bạn thành công.");
         } else {
-            return ResponseEntity.badRequest().body("Hai tài khoản không là bạn bè.");
+            return ResponseEntity.ok().body("Hai tài khoản không là bạn bè.");
         }
     }
     //api trả về các lời mời kết bạn mà tài khoản đang đăng nhập nhận được
