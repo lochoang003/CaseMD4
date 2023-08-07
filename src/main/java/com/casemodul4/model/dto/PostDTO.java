@@ -10,7 +10,7 @@ import lombok.Data;
 public class PostDTO {
     private int id;
     private String content;
-    private String img;
+    private byte[] img;
     private String video;
     private int idUser;
 }
