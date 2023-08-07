@@ -6,7 +6,9 @@ import com.casemodul4.model.dto.UserAccDTO;
 import com.casemodul4.repository.IUserAccRepo;
 import com.casemodul4.repository.role.RoleRepository;
 import com.casemodul4.service.IUserAccService;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +35,7 @@ public class UserAccController {
     }
     @PostMapping("/userAccDetail/{userAccId}")
     public ResponseEntity<UserAccDTO> findUserAccDTOById(@PathVariable int userAccId){
-     UserAccDTO userAccDTO = iUserAccService.findById(userAccId);
+        UserAccDTO userAccDTO = iUserAccService.findById(userAccId);
         if (userAccDTO != null) {
             return new ResponseEntity<>(userAccDTO,HttpStatus.OK);
         } else {
@@ -50,6 +52,39 @@ public class UserAccController {
         userAcc.setRole(role);
         iUserAccService.save(userAcc);
         return new ResponseEntity<>(userAcc, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/editUserAcc/{userAccId}")
+    public ResponseEntity<UserAcc> editUserAcc(@PathVariable int userAccId,
+                                               @RequestBody UserAcc userAcc){
+        UserAcc userAcc1 = iUserAccService.findByIdUserAcc(userAccId);
+        if (userAcc1 != null) {
+            userAcc.setId(userAccId);
+            userAcc.setPassword(userAcc1.getPassword());
+            userAcc.setRole(userAcc1.getRole());
+            iUserAccService.saveUserAcc(userAcc);
+            return new ResponseEntity<>(userAcc,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/editPassword/{userAccId}/{passworldNew}/{passwordOld}")
+    public ResponseEntity<UserAcc> editPassword(@PathVariable String passworldNew,
+                                                @PathVariable int userAccId,
+                                                @PathVariable String passwordOld){
+        UserAcc userAcc1 = iUserAccService.findByIdUserAcc(userAccId);
+        if (userAcc1 != null) {
+            if (userAcc1.getPassword().equals(passwordOld)) {
+                iUserAccService.changePassword(userAccId, passworldNew);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }

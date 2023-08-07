@@ -11,9 +11,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserAccService implements IUserAccService {
@@ -31,6 +31,8 @@ public class UserAccService implements IUserAccService {
         return userAccDTO.userAccDTO();
     }
 
+
+
     @Override
     public boolean save(UserAcc userAcc) {
         UserAcc userAcc1 = iUserAccRepo.findUserAccsByUsername(userAcc.getUsername());
@@ -42,6 +44,17 @@ public class UserAccService implements IUserAccService {
         }
         return false;
     }
+
+    @Override
+    public UserAcc saveUserAcc(UserAcc userAcc) {
+        return iUserAccRepo.save(userAcc);
+    }
+
+    @Override
+    public UserAcc findByIdUserAcc(int id) {
+        return iUserAccRepo.findById(id).get();
+    }
+
 
     @Override
     public void remove(int id) {
@@ -58,6 +71,23 @@ public class UserAccService implements IUserAccService {
     public UserAcc getUserAccLogin2(String username, String password) {
         return iUserAccRepo.findByUsernameAndPassword(username, password);
     }
+
+    @Transactional
+    @Override
+    public void changePassword(int id, String password) {
+
+        UserAcc userAcc = iUserAccRepo.findById(id).get();
+        if (userAcc != null) {
+            userAcc.setPassword(password);
+            iUserAccRepo.save(userAcc);
+        } else {
+            System.out.println("Fail");
+        }
+
+    }
+
+
+
 
     @Override
     public UserDetails loadUserByUsername(String username) {

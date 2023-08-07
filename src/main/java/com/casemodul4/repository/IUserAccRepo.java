@@ -2,6 +2,7 @@ package com.casemodul4.repository;
 
 import com.casemodul4.model.UserAcc;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -17,6 +18,8 @@ public interface IUserAccRepo extends JpaRepository<UserAcc,Integer> {
     UserAcc findAllByUsernameAndEmail(String username,String email);
     UserAcc findByUsername(String username);
     UserAcc getAllById(int id);
+
+
 
 }
 
