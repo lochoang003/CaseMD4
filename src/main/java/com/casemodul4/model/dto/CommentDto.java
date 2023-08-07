@@ -10,7 +10,7 @@ public class CommentDto {
     private int id;
     private String content;
     private Date createDate;
-    private int userAcncId;
+    private int userAccId;
     private String username;
     private String avatar;
     private int postId;
