@@ -33,10 +33,11 @@ public class PostController {
 
     @PostMapping("/createPost")
     public List<Post> create(@RequestParam("file") MultipartFile file, @RequestParam("content") String content, @RequestParam("idUser") int idUser) {
-        if (file!=null){
+        System.out.println(file.isEmpty());
+        if (file.isEmpty()){
+            postService.uploadImage(null,content,idUser);
+        }else
             postService.uploadImage(file, content, idUser);
-
-        }
         return postService.getAll();
     }
 

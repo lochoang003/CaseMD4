@@ -53,10 +53,10 @@ public class PostService implements ICrudService<Post> {
     }
 
     public Post uploadImage(MultipartFile file, String content , int idUser) {
-        fileUtils.validateFile(file);
         Post post = new Post();
         UserAcc userAcc = userAccService.findByIdUserAcc(idUser);
         if (file!=null){
+            fileUtils.validateFile(file);
             try {
                 if (userAcc != null){
                     byte[] fileBytes = file.getBytes();
