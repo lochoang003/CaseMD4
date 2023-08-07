@@ -1,14 +1,13 @@
 package com.casemodul4.controller;
 
 import com.casemodul4.model.Post;
-import com.casemodul4.model.UserAcc;
-import com.casemodul4.model.dto.PostDTO;
 import com.casemodul4.service.impl.PostService;
 import com.casemodul4.service.impl.UserAccService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +20,7 @@ public class PostController {
     PostService postService;
     @Autowired
     UserAccService userAccService;
+
     @GetMapping
     public List<Post> getAll() {
         return postService.getAll();
@@ -32,9 +32,14 @@ public class PostController {
     }
 
     @PostMapping("/createPost")
-    public void create(@RequestBody Post post) {
-        postService.save(post);
+    public List<Post> create(@RequestParam("file") MultipartFile file, @RequestParam("content") String content, @RequestParam("idUser") int idUser) {
+        if (file!=null){
+            postService.uploadImage(file, content, idUser);
+
+        }
+        return postService.getAll();
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<Post> findUserAccById(@PathVariable int id) {
         Optional<Post> postOptional = postService.findById(id);

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -20,12 +21,14 @@ public class Post {
     private UserAcc userAcc;
     @Column(columnDefinition = "TEXT")
     private String content;
-    private String img;
+    @Lob // Large Object
+    @Column(name = "img", columnDefinition = "LONGBLOB")
+    private byte[] img;
     private String video;
-    private Date createDate;
-    private int likeCount;
-    private int commentCount;
-    private int shareCount;
+    private Date createDate = Date.valueOf(LocalDate.now());
+    private int likeCount =0;
+    private int commentCount =0;
+    private int shareCount =0;
     public PostDTO postDTO() {
         return new PostDTO(id,content,img,video, userAcc.getId());
     }

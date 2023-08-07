@@ -27,44 +27,48 @@ public class UserAccController {
 
     @PostMapping("/forgotPassword")
     public ResponseEntity<UserAcc> forgot(@RequestBody UserAcc userAcc) {
-      UserAcc userAcc1=  iUserAccRepo.findAllByUsernameAndEmail(userAcc.getUsername(),userAcc.getEmail());
-      if (userAcc1 !=null)
-          return new ResponseEntity<>(userAcc1, HttpStatus.OK);
-      else
-          return new ResponseEntity<>( HttpStatus.NOT_FOUND);
+        UserAcc userAcc1 = iUserAccRepo.findAllByUsernameAndEmail(userAcc.getUsername(), userAcc.getEmail());
+        if (userAcc1 != null)
+            return new ResponseEntity<>(userAcc1, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
     @PostMapping("/userAccDetail/{userAccId}")
-    public ResponseEntity<UserAccDTO> findUserAccDTOById(@PathVariable int userAccId){
+    public ResponseEntity<UserAccDTO> findUserAccDTOById(@PathVariable int userAccId) {
         UserAccDTO userAccDTO = iUserAccService.findById(userAccId);
         if (userAccDTO != null) {
-            return new ResponseEntity<>(userAccDTO,HttpStatus.OK);
+            return new ResponseEntity<>(userAccDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         }
     }
+
     @PostMapping("/register")
-    public ResponseEntity<UserAcc> createNewAcc(@RequestBody UserAcc userAcc){
+    public ResponseEntity<UserAcc> createNewAcc(@RequestBody UserAcc userAcc) {
         userAcc.setAvatar("https://cdn.pixabay.com/photo/2014/03/24/13/49/avatar-294480_960_720.png");
         userAcc.setCoverPhoto("https://file.vfo.vn/hinh/2014/3/anh-bia-facebook-7.jpg");
         userAcc.setDescription("");
-        Role role = roleRepository.findByName("ROLE_USER");
-        userAcc.setRole(role);
-        iUserAccService.save(userAcc);
-        return new ResponseEntity<>(userAcc, HttpStatus.OK);
+//        Role role = roleRepository.findByName("ROLE_USER");
+//        userAcc.setRole(role);
+        if (iUserAccService.save(userAcc))
+            return new ResponseEntity<>(userAcc, HttpStatus.OK);
+        else
+            return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 
     @PostMapping("/editUserAcc/{userAccId}")
     public ResponseEntity<UserAcc> editUserAcc(@PathVariable int userAccId,
-                                               @RequestBody UserAcc userAcc){
+                                               @RequestBody UserAcc userAcc) {
         UserAcc userAcc1 = iUserAccService.findByIdUserAcc(userAccId);
         if (userAcc1 != null) {
             userAcc.setId(userAccId);
             userAcc.setPassword(userAcc1.getPassword());
             userAcc.setRole(userAcc1.getRole());
             iUserAccService.saveUserAcc(userAcc);
-            return new ResponseEntity<>(userAcc,HttpStatus.OK);
+            return new ResponseEntity<>(userAcc, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -73,7 +77,7 @@ public class UserAccController {
     @PostMapping("/editPassword/{userAccId}/{passworldNew}/{passwordOld}")
     public ResponseEntity<UserAcc> editPassword(@PathVariable String passworldNew,
                                                 @PathVariable int userAccId,
-                                                @PathVariable String passwordOld){
+                                                @PathVariable String passwordOld) {
         UserAcc userAcc1 = iUserAccService.findByIdUserAcc(userAccId);
         if (userAcc1 != null) {
             if (userAcc1.getPassword().equals(passwordOld)) {
