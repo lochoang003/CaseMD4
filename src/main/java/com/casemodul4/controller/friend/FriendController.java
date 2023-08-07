@@ -11,12 +11,13 @@ import com.casemodul4.repository.friend.FriendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-
+@CrossOrigin("*")
 @RestController
 
 @RequestMapping("/api")
@@ -26,6 +27,8 @@ public class FriendController {
 
     @Autowired
     private FriendRepository friendRepository;
+//    @Autowired
+//    private SimpMessagingTemplate messagingTemplate;
 //api gửi lời mời kết bạn
 @PostMapping("/sendAddFriend")
 public ResponseEntity<String> friendRequest(@RequestBody FriendRequestDTO friendRequestDTO) {
@@ -55,6 +58,14 @@ public ResponseEntity<String> friendRequest(@RequestBody FriendRequestDTO friend
     friendship.setFriend(receiver);
     friendship.setStatus((byte) 0); // Mặc định là pending khi gửi yêu cầu kết bạn
     friendRepository.save(friendship);
+
+//    // Gửi thông báo WebSocket đến người nhận lời mời kết bạn
+//    messagingTemplate.convertAndSendToUser(
+//            Integer.toString(receiver.getId()), // Chuyển sang kiểu Integer và sau đó chuyển sang kiểu String
+//            "/topic/friendRequests",
+//            "Bạn có một lời mời kết bạn mới từ " + sender.getUsername()
+//    );
+
     return ResponseEntity.ok().body("Đã gửi lời kết bạn thành công.");
 }
 
@@ -158,18 +169,32 @@ public ResponseEntity<String> friendRequest(@RequestBody FriendRequestDTO friend
         return ResponseEntity.ok(friendRequests);
     }
 //api xóa 1 lời mời kết bạn mà tài khoản đang đăng nhâp nhận được
-@DeleteMapping("/friendRequests")
-public ResponseEntity<String> deleteFriendRequest(@AuthenticationPrincipal UserDetails userDetails,
-                                                  @RequestBody DeleteFriendRequestDTO deleteRequestDTO) {
+@PostMapping("/delFriendRequests")
+public ResponseEntity<Map<String, Object>> deleteFriendRequest(@AuthenticationPrincipal UserDetails userDetails, @RequestBody FriendRequestDTO friendRequestDTO) {
     String loggedInUsername = userDetails.getUsername();
     UserAcc loggedInUser = userAccRepo.findByUsername(loggedInUsername);
-    // Kiểm tra xem lời mời kết bạn có tồn tại và có được gửi đến người dùng đang đăng nhập không
-    Friend friendRequest = friendRepository.findById(deleteRequestDTO.getRequestId()).orElse(null);
-    if (friendRequest == null || !friendRequest.getFriend().equals(loggedInUser)) {
+
+    UserAcc sender = userAccRepo.findById(friendRequestDTO.getSenderId()).orElse(null);
+    UserAcc receiver = userAccRepo.findById(friendRequestDTO.getReceiverId()).orElse(null);
+    if (sender == null || receiver == null) {
         return ResponseEntity.notFound().build();
     }
+    // Kiểm tra xem lời mời kết bạn có tồn tại và có được gửi đến người dùng đang đăng nhập không
+    Friend friendship = friendRepository.findByUserAccOrFriend(sender, receiver);
+    if (friendship == null || !friendship.getFriend().equals(loggedInUser)) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("message", "Không tìm thấy lời mời kết bạn.");
+        return ResponseEntity.ok(response);
+    }
+
     // Xóa lời mời kết bạn
-    friendRepository.delete(friendRequest);
-    return ResponseEntity.ok("Đã xóa lời mời kết bạn thành công.");
+    friendRepository.delete(friendship);
+    Map<String, Object> response = new HashMap<>();
+    response.put("success", true);
+    response.put("message", "Đã xóa lời mời kết bạn thành công.");
+    return ResponseEntity.ok(response);
 }
+
 }
+
