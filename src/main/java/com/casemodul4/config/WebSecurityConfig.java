@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/login", "/register","/home","/forgotPassword").permitAll()
                 .and().authorizeRequests().antMatchers("/admin**").hasRole("ADMIN")
                 .and().authorizeRequests().antMatchers("/user**").hasRole("USER")
-
+                
                 .anyRequest().authenticated()
                 .and().csrf().disable();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
